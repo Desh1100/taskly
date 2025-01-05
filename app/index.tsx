@@ -20,6 +20,7 @@ export default function App() {
     { id: "1", name: "Coffee", isCompleted: false },
     { id: "2", name: "Car", isCompleted: false },
     { id: "3", name: "Tea", isCompleted: true },
+    { id: "4", name: "Cake", isCompleted: true },
   ]);
 
   const [filteredItems, setFilteredItems] = useState(shoppingItems);

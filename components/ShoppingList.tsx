@@ -1,6 +1,8 @@
 import { TouchableOpacity, View, Alert, StyleSheet, Text } from "react-native";
 import { theme } from "../theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import * as Haptics from "expo-haptics";
 
 type Props = {
   name: string;
@@ -9,13 +11,18 @@ type Props = {
 
 export function ShoppingListItem({ name, isCompleted }: Props) {
   const handleDelete = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error); // Trigger haptic feedback when alert is shown
+
     Alert.alert(
-      `Are you sure you want to delete1 ${name}?`,
+      `Are you sure you want to delete ${name}?`,
       "It will be gone for good",
       [
         {
           text: "Yes",
-          onPress: () => console.log("Ok, deleting."),
+          onPress: () => {
+            console.log("Ok, deleting.");
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); // Trigger success feedback after deleting
+          },
           style: "destructive",
         },
         { text: "Cancel", style: "cancel" },
@@ -30,14 +37,22 @@ export function ShoppingListItem({ name, isCompleted }: Props) {
         isCompleted ? styles.completedContainer : undefined,
       ]}
     >
-      <Text
-        style={[
-          styles.itemText,
-          isCompleted ? styles.completedText : undefined,
-        ]}
-      >
-        {name}
-      </Text>
+      <View style={styles.itemTextContainer}>
+        <Entypo
+          name={isCompleted ? "check" : "circle"}
+          size={24}
+          color={isCompleted ? theme.colorGrey : theme.colorCerulean}
+        />
+
+        <Text
+          style={[
+            styles.itemText,
+            isCompleted ? styles.completedText : undefined,
+          ]}
+        >
+          {name}
+        </Text>
+      </View>
       <TouchableOpacity onPress={handleDelete} activeOpacity={0.8}>
         <AntDesign
           name="closecircle"
@@ -79,5 +94,9 @@ const styles = StyleSheet.create({
     color: theme.colorGrey,
     textDecorationLine: "line-through",
     textDecorationColor: theme.colorGrey,
+  },
+  itemTextContainer: {
+    flexDirection: "row",
+    gap: 8,
   },
 });
